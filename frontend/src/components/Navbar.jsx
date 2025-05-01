@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "../styles/Navbar.css"; // Create separate styles for Navbar
 
 const Navbar = () => {
@@ -7,15 +8,15 @@ const Navbar = () => {
       <div><strong>M-SHIGANA</strong></div>
       <div className="nav-links">
         {[
-          { label: "HOME", onClick: () => console.log("Home clicked") },
-          { label: "ABOUT", onClick: () => console.log("About clicked") },
-          { label: "PAGES", onClick: () => console.log("Pages clicked") },
-          { label: "FEATURES", onClick: () => console.log("Features clicked") },
-          { label: "BLOG", onClick: () => console.log("Blog clicked") },
+          { label: "HOME", path: "/" },
+          { label: "ABOUT", path: "/about" },
+          { label: "PAGES", path: "/pages" },
+          { label: "FEATURES", path: "/features" },
+          { label: "BLOG", path: "/blog" },
         ].map((link) => (
-          <button key={link.label} onClick={link.onClick} className="nav-button">
+          <Link key={link.label} to={link.path} className="nav-button">
             {link.label}
-          </button>
+          </Link>
         ))}
       </div>
     </nav>
