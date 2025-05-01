@@ -6,8 +6,16 @@ const Navbar = () => {
     <nav className="navbar">
       <div><strong>M-SHIGANA</strong></div>
       <div className="nav-links">
-        {["HOME", "ABOUT", "PAGES", "FEATURES", "BLOG"].map((link) => (
-          <a key={link} href="#">{link}</a>
+        {[
+          { label: "HOME", onClick: () => console.log("Home clicked") },
+          { label: "ABOUT", onClick: () => console.log("About clicked") },
+          { label: "PAGES", onClick: () => console.log("Pages clicked") },
+          { label: "FEATURES", onClick: () => console.log("Features clicked") },
+          { label: "BLOG", onClick: () => console.log("Blog clicked") },
+        ].map((link) => (
+          <button key={link.label} onClick={link.onClick} className="nav-button">
+            {link.label}
+          </button>
         ))}
       </div>
     </nav>
