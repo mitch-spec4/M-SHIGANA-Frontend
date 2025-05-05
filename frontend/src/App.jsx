@@ -17,7 +17,17 @@ import Transactions from './components/Transactions'
 import Beneficiaries from './components/Beneficiaries'
 import Notifications from './components/Notifications'
 import UserDashboard from './components/UserDashboard'
-import AdminDashboard from './components/AdminDashboard'
+
+import AdminDashboard from './admin/AdminDashboard'
+import UserManagement from './admin/UserManagement'
+import TransactionOversight from './admin/TransactionOversight'
+import WalletAnalytics from './admin/WalletAnalytics'
+import ProfitMonitoring from './admin/ProfitMonitoring'
+import BeneficiaryOversight from './admin/BeneficiaryOversight'
+import NotificationsAdmin from './admin/NotificationsAdmin'
+import AuditLogs from './admin/AuditLogs'
+import SystemConfiguration from './admin/SystemConfiguration'
+import SupportTools from './admin/SupportTools'
 
 export const AuthContext = React.createContext()
 
@@ -120,8 +130,6 @@ function App() {
     localStorage.setItem('token', token)
     localStorage.setItem('user', JSON.stringify(userData))
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-
-    // No redirection here; handled inside Login component
   }
 
   const logout = () => {
@@ -155,7 +163,27 @@ function App() {
           <Route path="/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
           <Route path="/beneficiaries" element={<ProtectedRoute><Beneficiaries /></ProtectedRoute>} />
           <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-          <Route path="/admin-dashboard" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
+
+          {/* Admin nested routes with Outlet for better structure */}
+          <Route
+            path="/admin-dashboard/*"
+            element={
+              <ProtectedRoute role="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="user-management" element={<UserManagement />} />
+            <Route path="transaction-oversight" element={<TransactionOversight />} />
+            <Route path="wallet-analytics" element={<WalletAnalytics />} />
+            <Route path="profit-monitoring" element={<ProfitMonitoring />} />
+            <Route path="beneficiary-oversight" element={<BeneficiaryOversight />} />
+            <Route path="notifications" element={<NotificationsAdmin />} />
+            <Route path="audit-logs" element={<AuditLogs />} />
+            <Route path="system-configuration" element={<SystemConfiguration />} />
+            <Route path="support-tools" element={<SupportTools />} />
+          </Route>
+
           <Route path="/user-dashboard" element={<ProtectedRoute role="user"><UserDashboard /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
