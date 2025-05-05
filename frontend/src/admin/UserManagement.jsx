@@ -102,5 +102,40 @@ function UserManagement() {
           setActionLoading(false)
         }
       }
+      const addUser = async () => {
+        if (!validateEmail(addFormData.email)) {
+          setAddError('Invalid email address')
+          return
+        }
+        if (!addFormData.role) {
+          setAddError('Role is required')
+          return
+        }
+        if (!addFormData.status) {
+          setAddError('Status is required')
+          return
+        }
+        setAddLoading(true)
+        setAddError(null)
+        setAddSuccess(null)
+        try {
+          await axios.post('/admin/users', {
+            email: addFormData.email,
+            role: addFormData.role,
+            status: addFormData.status
+          })
+          setAddSuccess('User added successfully')
+          setAddFormData({
+            email: '',
+            role: 'user',
+            status: 'active'
+          })
+          await fetchUsers()
+        } catch (err) {
+          setAddError('Failed to add user')
+        } finally {
+          setAddLoading(false)
+        }
+      }
     
 }
