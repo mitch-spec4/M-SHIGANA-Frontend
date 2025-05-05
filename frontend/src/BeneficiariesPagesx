@@ -1,0 +1,25 @@
+import React, { useEffect, useState } from "react";
+
+function BeneficiariesPage() {
+  const [beneficiaries, setBeneficiaries] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/beneficiaries")
+      .then((res) => res.json())
+      .then((data) => setBeneficiaries(data))
+      .catch((err) => console.error("Failed to load beneficiaries:", err));
+  }, []);
+
+  return (
+    <div>
+      <h2>Beneficiaries</h2>
+      <ul>
+        {beneficiaries.map((b) => (
+          <li key={b.id}>{b.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default BeneficiariesPage;
