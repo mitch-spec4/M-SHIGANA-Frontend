@@ -57,4 +57,50 @@ function UserManagement() {
         })
         setActionError(null)
       }
+      const handleInputChange = (e) => {
+        const { name, value } = e.target
+        setEditFormData(prev => ({ ...prev, [name]: value }))
+      }
+    
+      const handleAddInputChange = (e) => {
+        const { name, value } = e.target
+        setAddFormData(prev => ({ ...prev, [name]: value }))
+        setAddError(null)
+        setAddSuccess(null)
+      }
+    
+      const validateEmail = (email) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        return re.test(email)
+      }
+      const saveUser = async () => {
+        if (!validateEmail(editFormData.email)) {
+          setActionError('Invalid email address')
+          return
+        }
+        if (!editFormData.role) {
+          setActionError('Role is required')
+          return
+        }
+        if (!editFormData.status) {
+          setActionError('Status is required')
+          return
+        }
+        setActionLoading(true)
+        setActionError(null)
+        try {
+          await axios.put(`/admin/users/${editingUserId}`, {
+            email: editFormData.email,
+            role: editFormData.role,
+            status: editFormData.status
+          })
+          await fetchUsers()
+          cancelEditing()
+        } catch (err) {
+          setActionError('Failed to save user details')
+        } finally {
+          setActionLoading(false)
+        }
+      }
+    
 }
