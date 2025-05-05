@@ -150,4 +150,152 @@ function UserManagement() {
           setActionLoading(false)
         }
       }
+      const deleteUser = async (userId) => {
+        if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+          return
+        }
+        setActionLoading(true)
+        setActionError(null)
+        try {
+          await axios.delete(`/admin/users/${userId}`)
+          await fetchUsers()
+        } catch (err) {
+          setActionError('Failed to delete user')
+        } finally {
+          setActionLoading(false)
+        }
+      }
+    
+      return (
+        <div>
+          <h1>User Management</h1>
+    
+          <section style={{ marginBottom: '2rem' }}>
+            <h2>Add New User</h2>
+            {addError && <p className="error">{addError}</p>}
+            {addSuccess && <p className="success">{addSuccess}</p>}
+            <form onSubmit={e => { e.preventDefault(); addUser() }}>
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={addFormData.email}
+                onChange={handleAddInputChange}
+                disabled={addLoading}
+                required
+              />
+              <select
+                name="role"
+                value={addFormData.role}
+                onChange={handleAddInputChange}
+                disabled={addLoading}
+                required
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+                <option value="moderator">Moderator</option>
+              </select>
+              <select
+                name="status"
+                value={addFormData.status}
+                onChange={handleAddInputChange}
+                disabled={addLoading}
+                required
+              >
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+              <button type="submit" disabled={addLoading}>Add User</button>
+            </form>
+          </section>
+    
+          {loading && <p>Loading users...</p>}
+          {error && <p className="error">{error}</p>}
+          {actionError && <p className="error">{actionError}</p>}
+          {!loading && users.length === 0 && <p>No users found.</p>}
+          {!loading && users.length > 0 && (
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map(user => (
+                  <tr key={user.id}>
+                    <td>{user.id}</td>
+                    <td>
+                      {editingUserId === user.id ? (
+                        <input
+                          type="email"
+                          name="email"
+                          value={editFormData.email}
+                          onChange={handleInputChange}
+                          disabled={actionLoading}
+                        />
+                      ) : (
+                        user.email
+                      )}
+                    </td>
+                    <td>
+                      {editingUserId === user.id ? (
+                        <select
+                          name="role"
+                          value={editFormData.role}
+                          onChange={handleInputChange}
+                          disabled={actionLoading}
+                        >
+                          <option value="user">User</option>
+                          <option value="admin">Admin</option>
+                          <option value="moderator">Moderator</option>
+                        </select>
+                      ) : (
+                        user.role
+                      )}
+                    </td>
+                    <td>
+                      {editingUserId === user.id ? (
+                        <select
+                          name="status"
+                          value={editFormData.status}
+                          onChange={handleInputChange}
+                          disabled={actionLoading}
+                        >
+                          <option value="active">Active</option>
+                          <option value="inactive">Inactive</option>
+                        </select>
+                      ) : (
+                        user.status || 'active'
+                      )}
+                    </td>
+                    <td>
+                      {editingUserId === user.id ? (
+                        <>
+                          <button onClick={saveUser} disabled={actionLoading}>Save</button>
+                          <button onClick={cancelEditing} disabled={actionLoading}>Cancel</button>
+                        </>
+                      ) : (
+                        <>
+                          <button onClick={() => startEditing(user)} disabled={actionLoading}>Edit</button>
+                          <button onClick={() => toggleUserStatus(user)} disabled={actionLoading}>
+                            {user.status === 'active' ? 'Deactivate' : 'Activate'}
+                          </button>
+                          <button onClick={() => deleteUser(user.id)} disabled={actionLoading}>Delete</button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )
+    
 }
+
+export default UserManagement
