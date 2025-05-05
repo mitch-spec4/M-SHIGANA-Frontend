@@ -137,5 +137,17 @@ function UserManagement() {
           setAddLoading(false)
         }
       }
-    
+      const toggleUserStatus = async (user) => {
+        setActionLoading(true)
+        setActionError(null)
+        try {
+          const newStatus = user.status === 'active' ? 'inactive' : 'active'
+          await axios.patch(`/admin/users/${user.id}/status`, { status: newStatus })
+          await fetchUsers()
+        } catch (err) {
+          setActionError('Failed to update user status')
+        } finally {
+          setActionLoading(false)
+        }
+      }
 }
