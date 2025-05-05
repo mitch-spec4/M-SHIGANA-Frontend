@@ -34,4 +34,27 @@ function UserManagement() {
         setLoading(false)
       }
     }
+    useEffect(() => {
+        fetchUsers()
+      }, [])
+    
+      const startEditing = (user) => {
+        setEditingUserId(user.id)
+        setEditFormData({
+          email: user.email,
+          role: user.role,
+          status: user.status || 'active'
+        })
+        setActionError(null)
+      }
+    
+      const cancelEditing = () => {
+        setEditingUserId(null)
+        setEditFormData({
+          email: '',
+          role: '',
+          status: ''
+        })
+        setActionError(null)
+      }
 }
