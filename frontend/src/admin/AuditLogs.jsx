@@ -11,7 +11,9 @@ const AuditLogs = () => {
     action: '',
     userId: ''
   });
-
+  useEffect(() => {
+    fetchLogs();
+  }, []);
  
 };
 
