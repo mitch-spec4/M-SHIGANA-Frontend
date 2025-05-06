@@ -14,7 +14,10 @@ function Transactions() {
     setError(null)
     try {
       const response = await axios.get(`/transactions/history`)
-      setTransactions(response.data.transactions || response.data)
+      console.log('Transactions response:', response.data)
+      const sent = Array.isArray(response.data.sent) ? response.data.sent : []
+      const received = Array.isArray(response.data.received) ? response.data.received : []
+      setTransactions([...sent, ...received])
     } catch (err) {
       setError('Failed to load transactions')
     } finally {

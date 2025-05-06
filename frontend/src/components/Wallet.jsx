@@ -13,11 +13,17 @@ function Wallet() {
   const [error, setError] = useState(null)
 
   const fetchBalance = async () => {
-    if (!user) return
+    if (!user) {
+      console.log('No user in context')
+      return
+    }
+    console.log('Fetching balance for user:', user)
     try {
       const response = await axios.get(`/wallet/${user.id}`)
-      setBalance(response.data.balance)
+      console.log('Wallet balance response:', response.data)
+      setBalance(response.data.wallet.balance)
     } catch (err) {
+      console.error('Error fetching wallet balance:', err)
       setError('Failed to fetch wallet balance')
     }
   }
@@ -48,7 +54,7 @@ function Wallet() {
     <div>
       <h2>Wallet</h2>
       {error && <div className="error">{error}</div>}
-      <p>Balance: {balance !== null ? `$${balance.toFixed(2)}` : 'Loading...'}</p>
+      <p>Balance: {typeof balance === 'number' ? `$${balance.toFixed(2)}` : 'Loading...'}</p>
       <form onSubmit={addFunds}>
         <label htmlFor="amount">Add Funds</label>
         <input
