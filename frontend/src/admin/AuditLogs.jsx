@@ -11,6 +11,7 @@ const AuditLogs = () => {
     action: '',
     userId: ''
   });
+
   useEffect(() => {
     fetchLogs();
   }, []);
@@ -29,7 +30,7 @@ const AuditLogs = () => {
           'Authorization': `Bearer ${localStorage.getItem('token')}` // Add JWT token
         }
       });
-
+      
       if (!response.ok) throw new Error('Failed to fetch logs');
       
       const data = await response.json();
@@ -133,4 +134,3 @@ const AuditLogs = () => {
 };
 
 export default AuditLogs;
- 
