@@ -29,6 +29,18 @@ const AuditLogs = () => {
           'Authorization': `Bearer ${localStorage.getItem('token')}` // Add JWT token
         }
       });
+
+      if (!response.ok) throw new Error('Failed to fetch logs');
+      
+      const data = await response.json();
+      setLogs(data);
+    } catch (error) {
+      console.error('Error fetching audit logs:', error);
+      alert('Failed to load audit logs. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
  
 };
 
