@@ -14,6 +14,21 @@ const AuditLogs = () => {
   useEffect(() => {
     fetchLogs();
   }, []);
+
+  const fetchLogs = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (filters.startDate) params.append('startDate', filters.startDate);
+      if (filters.endDate) params.append('endDate', filters.endDate);
+      if (filters.action) params.append('action', filters.action);
+      if (filters.userId) params.append('userId', filters.userId);
+
+      const response = await fetch(`/api/audit/logs?${params.toString()}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}` // Add JWT token
+        }
+      });
  
 };
 
