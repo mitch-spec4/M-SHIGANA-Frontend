@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
-import axios from 'axios'
+import api from '../api'
 import { AuthContext } from '../App'
 
 function Notifications() {
-  const { user } = useContext(AuthContext)
+  const { user, token } = useContext(AuthContext)
   const [notifications, setNotifications] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -12,9 +12,18 @@ function Notifications() {
     setLoading(true)
     setError(null)
     try {
-      const response = await axios.get(`/notifications/`)
-      setNotifications(response.data.notifications || response.data)
+      const response = await api.get('notifications/', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      const data = response.data.notifications || response.data
+      const sorted = [...data].sort(
+        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+      )
+      setNotifications(sorted)
     } catch (err) {
+      console.error(err)
       setError('Failed to load notifications')
     } finally {
       setLoading(false)
@@ -22,18 +31,23 @@ function Notifications() {
   }
 
   useEffect(() => {
-    fetchNotifications()
-  }, [])
+    if (user?.token) {
+      fetchNotifications()
+    }
+  }, [user])
 
   return (
     <div>
       <h2>Notifications</h2>
+      <button onClick={fetchNotifications} disabled={loading}>
+        Refresh
+      </button>
       {error && <div className="error">{error}</div>}
       {loading && <p>Loading...</p>}
       {!loading && notifications.length === 0 && <p>No notifications.</p>}
       <ul>
         {notifications.map(n => (
-          <li key={n.id}>
+          <li key={n.id} style={{ fontWeight: n.read ? 'normal' : 'bold' }}>
             {new Date(n.timestamp).toLocaleString()} - {n.message}
           </li>
         ))}

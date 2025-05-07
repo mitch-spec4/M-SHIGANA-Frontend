@@ -7,7 +7,7 @@ export default defineConfig({
     port: 3000,
     strictPort: false,
     proxy: {
-      '^/(api|auth|wallet|transactions|beneficiaries|notifications|admin)': {
+      '^/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,

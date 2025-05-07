@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import axios from 'axios'
 import { AuthContext } from '../App'
 
@@ -9,6 +9,25 @@ function SendMoney() {
   const [message, setMessage] = useState(null)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [beneficiaries, setBeneficiaries] = useState([])
+
+  // Fetch beneficiaries when the component mounts
+  useEffect(() => {
+    const fetchBeneficiaries = async () => {
+      try {
+        const response = await axios.get('/api/beneficiaries/', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`, // Pass the JWT token
+          },
+        })
+        setBeneficiaries(response.data.beneficiaries)  // Assuming the response has "beneficiaries" key
+      } catch (err) {
+        setError('Failed to fetch beneficiaries')
+      }
+    }
+
+    fetchBeneficiaries()
+  }, [])
 
   const onSubmit = async (e) => {
     e.preventDefault()
@@ -16,10 +35,15 @@ function SendMoney() {
     setLoading(true)
     setError(null)
     setMessage(null)
+
     try {
-      const response = await axios.post('/transactions/send', {
+      const response = await axios.post('/api/transactions/send', {
         receiver_id: parseInt(receiverId, 10),
         amount: parseFloat(amount),
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`, // Pass the JWT token
+        }
       })
       setMessage('Transaction successful.')
       setReceiverId('')
@@ -37,14 +61,21 @@ function SendMoney() {
       {error && <div className="error">{error}</div>}
       {message && <div className="message">{message}</div>}
       <form onSubmit={onSubmit}>
-        <label htmlFor="receiverId">Receiver User ID</label>
-        <input
+        <label htmlFor="receiverId">Select Beneficiary</label>
+        <select
           id="receiverId"
-          type="number"
-          required
           value={receiverId}
-          onChange={e => setReceiverId(e.target.value)}
-        />
+          onChange={(e) => setReceiverId(e.target.value)}
+          required
+        >
+          <option value="">Select a beneficiary</option>
+          {beneficiaries.map((beneficiary) => (
+            <option key={beneficiary.id} value={beneficiary.beneficiary_user_id}>
+              {beneficiary.full_name || `User ID: ${beneficiary.beneficiary_user_id}`}
+            </option>
+          ))}
+        </select>
+
         <label htmlFor="amount">Amount</label>
         <input
           id="amount"
@@ -53,8 +84,9 @@ function SendMoney() {
           min="0"
           required
           value={amount}
-          onChange={e => setAmount(e.target.value)}
+          onChange={(e) => setAmount(e.target.value)}
         />
+        
         <button type="submit" disabled={loading}>
           {loading ? 'Sending...' : 'Send Money'}
         </button>

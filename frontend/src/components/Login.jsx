@@ -50,7 +50,7 @@ const Login = () => {
          localStorage.setItem('token', result.access_token)
          localStorage.setItem('user', JSON.stringify(result.user))
                 // save wallet info if returned
-         localStorage.setItem('wallet', JSON.stringify(result.wallet))
+         localStorage.setItem('wallet', JSON.stringify(result.wallet_data))
  
          // Update global login state
          login(result.user, result.access_token, result.wallet) // or pass actual user object if backend provides one

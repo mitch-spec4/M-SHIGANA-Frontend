@@ -42,7 +42,7 @@ function NavBar() {
       <div className="flex">
         {user ? (
           <>
-            <span>Hello, {user.email}</span>
+            <span>Hello, {user.name}</span>
             <Link to="/wallet" className={isActive('/wallet') ? 'active' : ''}>Wallet</Link>
             <Link to="/send-money" className={isActive('/send-money') ? 'active' : ''}>Send Money</Link>
             <Link to="/transactions" className={isActive('/transactions') ? 'active' : ''}>Transactions</Link>
