@@ -22,3 +22,13 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+
+const ProfitMonitoring = () => {
+  const [profitData, setProfitData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [filters, setFilters] = useState({
+    startDate: '',
+    endDate: '',
+    groupBy: 'day'
+  });
+  const [totalProfit, setTotalProfit] = useState(0);
