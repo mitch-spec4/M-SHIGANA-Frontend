@@ -32,3 +32,36 @@ const ProfitMonitoring = () => {
     groupBy: 'day'
   });
   const [totalProfit, setTotalProfit] = useState(0);
+
+  useEffect(() => {
+    fetchProfitData();
+  }, [filters]);
+
+  const fetchProfitData = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (filters.startDate) params.append('startDate', filters.startDate);
+      if (filters.endDate) params.append('endDate', filters.endDate);
+      params.append('groupBy', filters.groupBy);
+
+      const response = await fetch(`/api/admin/profit?${params.toString()}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (!response.ok) throw new Error('Failed to fetch profit data');
+
+      const data = await response.json();
+      setProfitData(data);
+      
+      // Calculate total profit
+      const total = data.reduce((sum, item) => sum + item.profit, 0);
+      setTotalProfit(total);
+    } catch (error) {
+      console.error('Error fetching profit data:', error);
+      alert('Failed to load profit data. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
