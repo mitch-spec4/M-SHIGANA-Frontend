@@ -94,6 +94,7 @@ function ProtectedRoute({ children, role }) {
 function App() {
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(null)
+  const [wallet, setWallet] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -124,19 +125,20 @@ function App() {
     return () => axios.interceptors.response.eject(interceptor)
   }, [])
 
-  const login = (userData, token) => {
+  const login = (userData, token, walletData) => {
     setUser(userData)
     setToken(token)
-    localStorage.setItem('token', token)
-    localStorage.setItem('user', JSON.stringify(userData))
+    setWallet(walletData)
+    // localStorage.setItem('token', token)
+    // localStorage.setItem('user', JSON.stringify(userData))
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
   }
 
   const logout = () => {
     setUser(null)
     setToken(null)
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
+    setWallet(null)
+    localStorage.clear()
     delete axios.defaults.headers.common['Authorization']
     navigate('/')
   }

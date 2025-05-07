@@ -39,12 +39,21 @@ const Login = () => {
         }
 
         const result = await response.json()
-        // Store user and token in localStorage or context as needed
-        localStorage.setItem('user', JSON.stringify(result.user))
-        localStorage.setItem('token', result.token)
+        // // Store user and token in localStorage or context as needed
+        // localStorage.setItem('user', JSON.stringify(result.user))
+        // localStorage.setItem('token', result.token)
 
-        // Call login from context to update global state
-        login(result.user, result.token)
+        // // Call login from context to update global state
+        // login(result.user, result.token)
+
+         // Save token
+         localStorage.setItem('token', result.access_token)
+         localStorage.setItem('user', JSON.stringify(result.user))
+                // save wallet info if returned
+         localStorage.setItem('wallet', JSON.stringify(result.wallet))
+ 
+         // Update global login state
+         login(result.user, result.access_token, result.wallet) // or pass actual user object if backend provides one
 
         // Navigate based on role
         if (result.user.role === 'admin') {
@@ -52,7 +61,9 @@ const Login = () => {
         } else {
           navigate('/wallet')
         }
+        // navigate(result.redirect_to || '/wallet')
       } catch (error) {
+        console.error('Login error:', error)
         setErrors({ submit: 'Login failed. Check credentials.' })
       } finally {
         setSubmitting(false)
