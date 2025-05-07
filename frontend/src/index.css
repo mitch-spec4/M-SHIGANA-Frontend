@@ -5,8 +5,8 @@
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  background-color: #f9fafb;
-  color: #333;
+  background-color: hsl(133, 94%, 28%);
+  color: #fff;
 }
 
 a {

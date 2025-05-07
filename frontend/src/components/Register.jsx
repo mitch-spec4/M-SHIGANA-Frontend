@@ -1,9 +1,7 @@
 import React, { useState, useContext } from 'react'
-import axios from 'axios'
+import api from '../api'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../App'
-
-axios.defaults.baseURL = 'http://localhost:5000/api'
 
 function Register() {
   const [name, setName] = useState('')
@@ -34,10 +32,14 @@ function Register() {
 
     setLoading(true)
     try {
-      await axios.post('/register', { name, email, password, role })
+      console.log('Attempting registration with:', { name, email, password, role })
+      const registerResponse = await api.post('/register', { name, email, password, role })
+      console.log('Registration response:', registerResponse)
 
       // After successful registration, login the user automatically
-      const loginResponse = await axios.post('/login', { email, password })
+      const loginResponse = await api.post('/login', { email, password })
+      console.log('Login response:', loginResponse)
+
       if (loginResponse.data && loginResponse.data.token && loginResponse.data.user) {
         login(loginResponse.data.user, loginResponse.data.token)
 
@@ -51,7 +53,9 @@ function Register() {
         navigate('/login')
       }
     } catch (err) {
-      const message = err.response?.data?.message
+      console.error('Registration error:', err)
+      console.error('Full error response data:', err.response?.data)
+      const message = err.response?.data?.message || err.response?.data?.msg
       if (typeof message === 'string') {
         setError(message)
       } else if (typeof message === 'object') {
