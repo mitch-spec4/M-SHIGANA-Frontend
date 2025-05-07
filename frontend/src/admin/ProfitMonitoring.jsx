@@ -1,12 +1,13 @@
-import React from 'react'
-
-function ProfitMonitoring() {
-  return (
-    <div>
-      <h2>Profit/Revenue Monitoring</h2>
-      <p>Placeholder for Profit/Revenue Monitoring feature.</p>
-    </div>
-  )
-}
-
-export default ProfitMonitoring
+import React, { useState, useEffect } from 'react';
+import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+import './ProfitMonitoring.css';
