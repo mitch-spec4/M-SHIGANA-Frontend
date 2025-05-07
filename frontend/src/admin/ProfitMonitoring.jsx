@@ -65,3 +65,134 @@ const ProfitMonitoring = () => {
       setLoading(false);
     }
   };
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Chart data configuration
+  const chartData = {
+    labels: profitData.map(item => item.date),
+    datasets: [
+      {
+        label: 'Profit ($)',
+        data: profitData.map(item => item.profit),
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+        tension: 0.1
+      }
+    ]
+  };
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Profit Over Time',
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Amount ($)'
+        }
+      }
+    }
+  };
+
+  return (
+    <div className="profit-monitoring-container">
+      <h2>Profit Monitoring</h2>
+      
+      <div className="summary-card">
+        <h3>Total Profit</h3>
+        <p className="profit-amount">${totalProfit.toFixed(2)}</p>
+        <p className="profit-period">
+          {filters.startDate || 'All time'} to {filters.endDate || 'now'}
+        </p>
+      </div>
+      
+      <div className="filters">
+        <div className="filter-group">
+          <label>Start Date:</label>
+          <input
+            type="date"
+            name="startDate"
+            value={filters.startDate}
+            onChange={handleFilterChange}
+          />
+        </div>
+        <div className="filter-group">
+          <label>End Date:</label>
+          <input
+            type="date"
+            name="endDate"
+            value={filters.endDate}
+            onChange={handleFilterChange}
+          />
+        </div>
+        <div className="filter-group">
+          <label>Group By:</label>
+          <select
+            name="groupBy"
+            value={filters.groupBy}
+            onChange={handleFilterChange}
+          >
+            <option value="day">Daily</option>
+            <option value="week">Weekly</option>
+            <option value="month">Monthly</option>
+          </select>
+        </div>
+        <button onClick={fetchProfitData} disabled={loading}>
+          {loading ? 'Loading...' : 'Apply Filters'}
+        </button>
+      </div>
+      
+      <div className="chart-container">
+        {profitData.length > 0 ? (
+          <Line data={chartData} options={chartOptions} />
+        ) : (
+          <div className="no-data">
+            {loading ? 'Loading data...' : 'No profit data available for selected period'}
+          </div>
+        )}
+      </div>
+      
+      <div className="transactions-table">
+        <h3>Detailed Transactions</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Profit</th>
+            </tr>
+          </thead>
+          <tbody>
+            {profitData.length > 0 ? (
+              profitData.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.date}</td>
+                  <td>${item.profit.toFixed(2)}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="2">No data available</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+export default ProfitMonitoring;
+
