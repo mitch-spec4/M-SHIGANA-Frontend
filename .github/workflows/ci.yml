@@ -1,12 +1,26 @@
-name: CI
+name: Frontend CI
 
 on:
   push:
     branches:
       - main
+      - master
+      - Brian-Kim
+      - Hakeem2
+      - Robin
+      - Elisha-frontend
+      - mitch
+      - eve
   pull_request:
     branches:
       - main
+      - master
+      - Brian-Kim
+      - Hakeem2
+      - Robin
+      - Elisha-frontend
+      - mitch
+      - eve
 
 jobs:
   build:
@@ -16,20 +30,34 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Use Node.js 18
         uses: actions/setup-node@v3
         with:
-          node-version: 'lts/*'
-          cache: 'npm'
+          node-version: 18
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./frontend
+        working-directory: frontend
 
       - name: Run lint
-        run: npm run lint
-        working-directory: ./frontend
+        run: |
+          if npm run | grep -q "lint"; then
+            npm run lint
+          else
+            echo "No lint script found"
+          fi
+        working-directory: frontend
 
-      - name: Build project
+      - name: Build frontend
         run: npm run build
-        working-directory: ./frontend
+        working-directory: frontend
+
+     

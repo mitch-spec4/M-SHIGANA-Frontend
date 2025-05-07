@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react'
 import {
   Routes,
@@ -22,7 +21,7 @@ import UserDashboard from './components/UserDashboard'
 import AdminDashboard from './admin/AdminDashboard'
 import UserManagement from './admin/UserManagement'
 import TransactionOversight from './admin/TransactionOversight'
-import WalletAnalytics from './admin/WalletAnalytics'
+import WalletAnalytics from './admin/walletAnalytics'
 import ProfitMonitoring from './admin/ProfitMonitoring'
 import BeneficiaryOversight from './admin/BeneficiaryOversight'
 import NotificationsAdmin from './admin/NotificationsAdmin'
@@ -148,7 +147,7 @@ function App() {
       <div
         className="container"
         style={{
-          backgroundImage: 'url("https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fG1vbmV5JTIwdHJhbnNmZXJ8ZW58MHx8fHwxNjg3NTYyNzQ0&ixlib=rb-4.0.3&q=80&w=1080")',
+          backgroundImage: 'url("https://cdn.pixabay.com/animation/2022/09/09/21/19/21-19-47-383_512.gif")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
