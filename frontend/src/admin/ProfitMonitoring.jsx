@@ -1,3 +1,4 @@
+// ProfitMonitoring.jsx
 import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
@@ -10,7 +11,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
-// import './ProfitMonitoring.css';
+import './ProfitMonitoring.css';
 
 // Register ChartJS components
 ChartJS.register(
@@ -50,8 +51,9 @@ const ProfitMonitoring = () => {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
+      
       if (!response.ok) throw new Error('Failed to fetch profit data');
-
+      
       const data = await response.json();
       setProfitData(data);
       
@@ -195,4 +197,3 @@ const ProfitMonitoring = () => {
 };
 
 export default ProfitMonitoring;
-
