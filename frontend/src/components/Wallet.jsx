@@ -1,69 +1,87 @@
-import React, { useState, useEffect, useContext } from 'react'
-import axios from 'axios'
-import { AuthContext } from '../App'
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import { AuthContext } from '../App';
 
-axios.defaults.baseURL = 'http://localhost:5000/api'
+axios.defaults.baseURL = 'http://localhost:5000/api';
 
 function Wallet() {
-  const { user } = useContext(AuthContext)
-  const [balance, setBalance] = useState(null)
-  const [amount, setAmount] = useState('')
-  const [message, setMessage] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const { user } = useContext(AuthContext);
+  const [balance, setBalance] = useState(null);
+  const [amount, setAmount] = useState('');
+  const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Fetch the wallet balance if it's not in localStorage
   const fetchBalance = async () => {
     if (!user) {
-      console.log('No user in context')
-      return
+      console.log('No user in context');
+      return;
     }
 
-    console.log('Fetching balance for user:', user)
+    console.log('Fetching balance for user:', user);
+
+    const token = localStorage.getItem('access_token');  // Get the JWT token from localStorage
 
     try {
-      
-      const response = await axios.get('/wallet')
-      console.log('Raw response:', response)
-      console.log('Response data:', response.data)
-      console.log('response.data.wallet:', response.data.wallet)
-      console.log('Wallet balance response:', response.data)
-      // Save wallet data to 
-      localStorage.setItem('wallet', JSON.stringify(response.data.wallet))
-      setBalance(response.data.wallet.balance)
+      const response = await axios.get('/wallet', {
+        headers: {
+          Authorization: `Bearer ${token}`,  // Include the JWT token in the headers
+        },
+      });
+      console.log('Wallet balance response:', response.data);
+      localStorage.setItem('wallet', JSON.stringify(response.data.wallet));
+      setBalance(response.data.wallet.balance);
     } catch (err) {
-      console.error('Error fetching wallet balance:', err)
-      setError('Failed to fetch wallet balance')
+      console.error('Error fetching wallet balance:', err);
+      setError('Failed to fetch wallet balance');
     }
-  }
+  };
 
   useEffect(() => {
     // Check if the wallet is already stored in localStorage
-    const wallet = JSON.parse(localStorage.getItem('wallet'))
+    const wallet = JSON.parse(localStorage.getItem('wallet'));
     if (wallet) {
-      setBalance(wallet.balance)
+      setBalance(wallet.balance);
     } else {
-      fetchBalance() // Fetch from API if no localStorage data
+      fetchBalance();  // Fetch from API if no localStorage data
     }
-  }, [user]) // Fetch the balance when user changes
+  }, [user]);  // Fetch the balance when user changes
 
+  // Handle adding funds
   const addFunds = async (e) => {
-    e.preventDefault()
-    if (!user) return
-    setLoading(true)
-    setError(null)
-    setMessage(null)
-    try {
-      const response = await axios.post(`/wallet/add-funds`, { amount })
-      setMessage('Funds added successfully.')
-      setAmount('')
-      fetchBalance() // Update the balance after adding funds
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to add funds')
-    } finally {
-      setLoading(false)
+    e.preventDefault();
+    if (!user) return;
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+
+    const token = localStorage.getItem('access_token');  // Get the token from localStorage
+    if (!token) {
+      setError('User not authenticated');
+      setLoading(false);
+      return;
     }
-  }
+
+    try {
+      const response = await axios.post(
+        `/wallet/add-funds`,
+        { amount },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,  // Include the token in the header
+          },
+        }
+      );
+      setMessage('Funds added successfully.');
+      setAmount('');
+      fetchBalance();  // Update the balance after adding funds
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to add funds');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -79,7 +97,7 @@ function Wallet() {
           step="0.01"
           required
           value={amount}
-          onChange={e => setAmount(e.target.value)}
+          onChange={(e) => setAmount(e.target.value)}
         />
         <button type="submit" disabled={loading}>
           {loading ? 'Adding...' : 'Add Funds'}
@@ -87,8 +105,7 @@ function Wallet() {
       </form>
       {message && <p>{message}</p>}
     </div>
-  )
+  );
 }
 
-export default Wallet
-
+export default Wallet;

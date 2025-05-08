@@ -83,7 +83,7 @@ function Beneficiaries() {
       {success && <div className="success" style={{ color: 'green' }}>{success}</div>}
 
       <form onSubmit={addBeneficiary}>
-        <label htmlFor="beneficiaryUserId">Beneficiary User ID</label>
+        <label htmlFor="beneficiaryUserId">Beneficiary Unique number</label>
         <input
           id="beneficiaryUserId"
           type="text"

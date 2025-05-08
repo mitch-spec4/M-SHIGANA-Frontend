@@ -47,7 +47,7 @@ function Notifications() {
       {!loading && notifications.length === 0 && <p>No notifications.</p>}
       <ul>
         {notifications.map(n => (
-          <li key={n.id} style={{ fontWeight: n.read ? 'normal' : 'bold' }}>
+          <li key={n.name} style={{ fontWeight: n.read ? 'normal' : 'bold' }}>
             {new Date(n.timestamp).toLocaleString()} - {n.message}
           </li>
         ))}
