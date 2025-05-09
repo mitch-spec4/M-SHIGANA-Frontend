@@ -12,12 +12,12 @@ function Notifications() {
     setLoading(true)
     setError(null)
     try {
-      const response = await api.get('notifications/', {
+      const response = await api.get('/notifications', {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
-      const data = response.data.notifications || response.data
+      const data = response.data || []
       const sorted = [...data].sort(
         (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
       )
@@ -47,7 +47,7 @@ function Notifications() {
       {!loading && notifications.length === 0 && <p>No notifications.</p>}
       <ul>
         {notifications.map(n => (
-          <li key={n.name} style={{ fontWeight: n.read ? 'normal' : 'bold' }}>
+          <li key={n.id} style={{ fontWeight: n.read ? 'normal' : 'bold' }}>
             {new Date(n.timestamp).toLocaleString()} - {n.message}
           </li>
         ))}

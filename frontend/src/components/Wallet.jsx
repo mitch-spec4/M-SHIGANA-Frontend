@@ -19,9 +19,9 @@ function Wallet() {
       return;
     }
 
-    console.log('Fetching balance for user:', user);
+    // console.log('Fetching balance for user:', user);
 
-    const token = localStorage.getItem('access_token');  // Get the JWT token from localStorage
+    const token = localStorage.getItem('token');  // Get the JWT token from localStorage
 
     try {
       const response = await axios.get('/wallet', {
@@ -51,13 +51,17 @@ function Wallet() {
   // Handle adding funds
   const addFunds = async (e) => {
     e.preventDefault();
-    if (!user) return;
+    if (!user) {
+      console.log('No user in context');
+      return;
+    }
     setLoading(true);
     setError(null);
     setMessage(null);
 
-    const token = localStorage.getItem('access_token');  // Get the token from localStorage
+    const token = localStorage.getItem('token');  // Get the token from localStorage
     if (!token) {
+      console.error('No token found in localStorage');
       setError('User not authenticated');
       setLoading(false);
       return;
@@ -66,17 +70,20 @@ function Wallet() {
     try {
       const response = await axios.post(
         `/wallet/add-funds`,
-        { amount },
+        { amount: parseFloat(amount) },
         {
           headers: {
             Authorization: `Bearer ${token}`,  // Include the token in the header
           },
         }
       );
+      console.log('Add funds response:', response.data);
+    
       setMessage('Funds added successfully.');
       setAmount('');
       fetchBalance();  // Update the balance after adding funds
     } catch (err) {
+      console.error('Error adding funds:', err);
       setError(err.response?.data?.message || 'Failed to add funds');
     } finally {
       setLoading(false);
