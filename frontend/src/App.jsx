@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import SendMoney from './pages/SendMoney'; // Fixed import for SendMoney
-import Transactions from './pages/Transactions'; // Fixed import for Transactions
+import SendMoney from './components/sendmoney'; // Fixed import for SendMoney
+import Transactions from './components/Transactions'; // Fixed import for Transactions
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
