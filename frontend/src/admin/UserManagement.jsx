@@ -15,6 +15,7 @@ function UserManagement() {
   const [actionError, setActionError] = useState(null)
   const [addFormData, setAddFormData] = useState({
     email: '',
+    password: '',
     role: 'user',
     status: 'active'
   })
@@ -111,6 +112,10 @@ function UserManagement() {
       setAddError('Invalid email address')
       return
     }
+    if (!addFormData.password) {
+      setAddError('Password is required')
+      return
+    }
     if (!addFormData.role) {
       setAddError('Role is required')
       return
@@ -119,18 +124,22 @@ function UserManagement() {
       setAddError('Status is required')
       return
     }
+
     setAddLoading(true)
     setAddError(null)
     setAddSuccess(null)
+
     try {
       await axios.post('/admin/users', {
         email: addFormData.email,
+        password: addFormData.password,
         role: addFormData.role,
         status: addFormData.status
       })
       setAddSuccess('User added successfully')
       setAddFormData({
         email: '',
+        password: '',
         role: 'user',
         status: 'active'
       })
@@ -139,20 +148,6 @@ function UserManagement() {
       setAddError('Failed to add user')
     } finally {
       setAddLoading(false)
-    }
-  }
-
-  const toggleUserStatus = async (user) => {
-    setActionLoading(true)
-    setActionError(null)
-    try {
-      const newStatus = user.status === 'active' ? 'inactive' : 'active'
-      await axios.patch(`/admin/users/${user.id}/status`, { status: newStatus })
-      await fetchUsers()
-    } catch (err) {
-      setActionError('Failed to update user status')
-    } finally {
-      setActionLoading(false)
     }
   }
 
@@ -190,6 +185,15 @@ function UserManagement() {
             disabled={addLoading}
             required
           />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={addFormData.password}
+            onChange={handleAddInputChange}
+            disabled={addLoading}
+            required
+          />
           <select
             name="role"
             value={addFormData.role}
@@ -199,7 +203,6 @@ function UserManagement() {
           >
             <option value="user">User</option>
             <option value="admin">Admin</option>
-            <option value="moderator">Moderator</option>
           </select>
           <select
             name="status"
@@ -287,9 +290,6 @@ function UserManagement() {
                   ) : (
                     <>
                       <button onClick={() => startEditing(user)} disabled={actionLoading}>Edit</button>
-                      <button onClick={() => toggleUserStatus(user)} disabled={actionLoading}>
-                        {user.status === 'active' ? 'Deactivate' : 'Activate'}
-                      </button>
                       <button onClick={() => deleteUser(user.id)} disabled={actionLoading}>Delete</button>
                     </>
                   )}
