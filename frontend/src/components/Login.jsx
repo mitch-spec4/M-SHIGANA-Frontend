@@ -39,18 +39,13 @@ const Login = () => {
         }
 
         const result = await response.json()
-        // // Store user and token in localStorage or context as needed
-        // localStorage.setItem('user', JSON.stringify(result.user))
-        // localStorage.setItem('token', result.token)
-
-        // // Call login from context to update global state
-        // login(result.user, result.token)
-
+        console.log('Login result:', result)
+      
          // Save token
          localStorage.setItem('token', result.access_token)
          localStorage.setItem('user', JSON.stringify(result.user))
                 // save wallet info if returned
-         localStorage.setItem('wallet', JSON.stringify(result.wallet))
+         localStorage.setItem('wallet', JSON.stringify(result.wallet_data))
  
          // Update global login state
          login(result.user, result.access_token, result.wallet) // or pass actual user object if backend provides one

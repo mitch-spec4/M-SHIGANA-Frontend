@@ -45,7 +45,7 @@ function UserDashboard() {
   }, [user])
 
   return (
-    <div>
+    <div className="user-dashboard">
       <h1>User Dashboard</h1>
       <section>
         <h2>Wallet Balance</h2>
