@@ -1,13 +1,13 @@
-import React, { useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
-import './login.css'
-import { AuthContext } from '../App'
+import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import './login.css';
+import { AuthContext } from '../App';
 
 const Login = () => {
-  const navigate = useNavigate()
-  const { login } = useContext(AuthContext)
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const formik = useFormik({
     initialValues: {
@@ -15,12 +15,16 @@ const Login = () => {
       password: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email address').required('Email is required'),
-      password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+      email: Yup.string()
+        .email('Invalid email address')
+        .required('Email is required'),
+      password: Yup.string()
+        .min(6, 'Password must be at least 6 characters')
+        .required('Password is required'),
     }),
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
-        const response = await fetch('http://localhost:5000/api/login', {
+        const response = await fetch('/api/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -29,46 +33,44 @@ const Login = () => {
             email: values.email,
             password: values.password,
           }),
-        })
+        });
 
         if (!response.ok) {
-          const errorData = await response.json()
-          setErrors({ submit: errorData.message || 'Login failed' })
-          setSubmitting(false)
-          return
+          const errorData = await response.json();
+          setErrors({ submit: errorData.message || 'Login failed' });
+          setSubmitting(false);
+          return;
         }
 
-        const result = await response.json()
-        console.log('Login result:', result)
-      
-         // Save token
-         localStorage.setItem('token', result.access_token)
-         localStorage.setItem('user', JSON.stringify(result.user))
-                // save wallet info if returned
-         localStorage.setItem('wallet', JSON.stringify(result.wallet_data))
- 
-         // Update global login state
-         login(result.user, result.access_token, result.wallet) // or pass actual user object if backend provides one
+        const result = await response.json();
+        console.log('Login result:', result);
+
+        // Save token, user, and wallet data
+        localStorage.setItem('token', result.access_token);
+        localStorage.setItem('user', JSON.stringify(result.user));
+        localStorage.setItem('wallet', JSON.stringify(result.wallet_data || {}));
+
+        // Update global login state
+        login(result.user, result.access_token, result.wallet_data || {});
 
         // Navigate based on role
         if (result.user.role === 'admin') {
-          navigate('/admin-dashboard')
+          navigate('/admin-dashboard');
         } else {
-          navigate('/wallet')
+          navigate('/wallet');
         }
-        // navigate(result.redirect_to || '/wallet')
       } catch (error) {
-        console.error('Login error:', error)
-        setErrors({ submit: 'Login failed. Check credentials.' })
+        console.error('Login error:', error);
+        setErrors({ submit: 'Login failed. Please check your credentials.' });
       } finally {
-        setSubmitting(false)
+        setSubmitting(false);
       }
     },
-  })
+  });
 
   const handleSignupClick = () => {
-    navigate('/register')
-  }
+    navigate('/register');
+  };
 
   return (
     <div className="log-container">
@@ -90,7 +92,7 @@ const Login = () => {
                   value={formik.values.email}
                 />
                 {formik.touched.email && formik.errors.email ? (
-                  <div>{formik.errors.email}</div>
+                  <div className="error">{formik.errors.email}</div>
                 ) : null}
               </div>
 
@@ -107,17 +109,29 @@ const Login = () => {
                   value={formik.values.password}
                 />
                 {formik.touched.password && formik.errors.password ? (
-                  <div>{formik.errors.password}</div>
+                  <div className="error">{formik.errors.password}</div>
                 ) : null}
               </div>
 
-              {formik.errors.submit && <div className="error">{formik.errors.submit}</div>}
+              {formik.errors.submit && (
+                <div className="error">{formik.errors.submit}</div>
+              )}
 
-              <button type="submit" className="button login__submit" disabled={formik.isSubmitting}>
-                <span className="button__text">{formik.isSubmitting ? 'Logging in...' : 'Log In'}</span>
+              <button
+                type="submit"
+                className="button login__submit"
+                disabled={formik.isSubmitting}
+              >
+                <span className="button__text">
+                  {formik.isSubmitting ? 'Logging in...' : 'Log In'}
+                </span>
                 <i className="button__icon fas fa-chevron-right"></i>
               </button>
-              <button type="button" onClick={handleSignupClick} className="button login__submit">
+              <button
+                type="button"
+                onClick={handleSignupClick}
+                className="button login__submit"
+              >
                 <span className="button__text">Sign up Instead</span>
                 <i className="button__icon fas fa-chevron-right"></i>
               </button>
@@ -132,7 +146,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
