@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import api from '../api'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../App'
-
+import './register.css'
 function Register() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -70,7 +70,7 @@ function Register() {
   }
 
   return (
-    <div>
+    <div className="register-container">
       <h2>Register</h2>
       {error && <div className="error">{error}</div>}
       <form onSubmit={onSubmit}>
@@ -98,7 +98,7 @@ function Register() {
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
-        <div style={{ display: 'none' }}>
+        <div style={{ display: 'flow'  }}>
         <label htmlFor="role" >Role</label>
           <select id="role" value={role} onChange={e => setRole(e.target.value)}>
             <option value="user">User</option>

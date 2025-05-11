@@ -1,105 +1,178 @@
-/* login.css */
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(to right, #4e54c8, #8f94fb);
-}
-
+/* Main login container */
 .log-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  padding: 1rem;
+  background: linear-gradient(to right, #4a90e2, #50e3c2);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Card container */
 .l-container {
-  background: rgba(255, 255, 255, 0.95);
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  max-width: 420px;
   width: 100%;
-  max-width: 380px;
-  transition: transform 0.3s ease;
 }
 
-.l-container:hover {
-  transform: scale(1.02);
-}
-
-h2 {
+/* Header */
+.l-container h2 {
   text-align: center;
-  margin-bottom: 2rem;
-  color: #2d3748;
+  margin: 1.5rem 0;
+  color: #333;
 }
 
+/* Form wrapper */
+.screen_log {
+  position: relative;
+  background: #fff;
+  padding: 2rem;
+}
+
+/* Form content */
+.screen__content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Login field wrapper */
 .login__field {
+  display: flex;
+  align-items: center;
   margin-bottom: 1.25rem;
   position: relative;
 }
 
+/* Input icons */
+.login__icon {
+  margin-right: 0.75rem;
+  color: #4a90e2;
+  font-size: 1.2rem;
+}
+
+/* Input fields */
 .login__input {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
-  border: 1px solid #cbd5e0;
-  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   font-size: 1rem;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.3s ease;
 }
 
 .login__input:focus {
-  border-color: #4e54c8;
   outline: none;
+  border-color: #4a90e2;
 }
 
-.login__icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #a0aec0;
-  font-size: 1rem;
-}
-
+/* Error messages */
 .error {
-  color: #e53e3e;
-  font-size: 0.85rem;
-  margin-top: 0.25rem;
-  margin-left: 0.25rem;
+  color: #c00;
+  background: #ffe5e5;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
 }
 
-.button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #4e54c8;
-  color: white;
+/* Submit button */
+.button.login__submit {
+  background: #4a90e2;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  color: #fff;
+  padding: 0.75rem;
+  width: 100%;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: bold;
+  margin-bottom: 1rem;
   cursor: pointer;
-  margin-top: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
   transition: background 0.3s ease;
 }
 
-.button:hover {
-  background-color: #0badf2;
-}
-
-.button:disabled {
-  background-color: #a0aec0;
-  cursor: not-allowed;
-}
-
-.button__text {
-  margin-right: 0.5rem;
+.button.login__submit:hover {
+  background: #3b7ed0;
 }
 
 .button__icon {
-  font-size: 1rem;
+  margin-left: 0.5rem;
+  font-size: 1.1rem;
+}
+
+/* Background shapes (decorative) */
+.screen__background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.screen__background__shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(74, 144, 226, 0.3);
+  animation: float 6s ease-in-out infinite;
+}
+
+.screen__background__shape1 {
+  height: 100px;
+  width: 100px;
+  top: -50px;
+  left: -50px;
+}
+
+.screen__background__shape2 {
+  height: 150px;
+  width: 150px;
+  top: 80px;
+  right: -60px;
+}
+
+.screen__background__shape3 {
+  height: 80px;
+  width: 80px;
+  bottom: 20px;
+  left: 20px;
+}
+
+.screen__background__shape4 {
+  height: 120px;
+  width: 120px;
+  bottom: -60px;
+  right: -60px;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(15px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .screen_log {
+    padding: 1.5rem;
+  }
+
+  .login__input {
+    font-size: 0.95rem;
+  }
+
+  .button.login__submit {
+    font-size: 0.95rem;
+  }
 }
