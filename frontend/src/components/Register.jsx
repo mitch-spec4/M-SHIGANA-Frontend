@@ -98,11 +98,13 @@ function Register() {
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
-        <label htmlFor="role">Role</label>
-        <select id="role" value={role} onChange={e => setRole(e.target.value)}>
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
-        </select>
+        <div style={{ display: 'none' }}>
+        <label htmlFor="role" >Role</label>
+          <select id="role" value={role} onChange={e => setRole(e.target.value)}>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
         <button type="submit" disabled={loading}>
           {loading ? 'Registering...' : 'Register'}
         </button>
